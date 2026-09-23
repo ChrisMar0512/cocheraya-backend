@@ -1,0 +1,40 @@
+# ============================================================
+# CocheraYa Backend .gitignore
+# ============================================================
+
+# SEGURIDAD: Credenciales de Firebase — NUNCA subir al repositorio
+firebase-service-account.json
+src/main/resources/firebase-service-account.json
+
+# SEGURIDAD: Variables de entorno sensibles
+.env
+.env.local
+*.env
+
+# Maven build output
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.classpath
+.project
+.settings/
+bin/
+.vscode/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
