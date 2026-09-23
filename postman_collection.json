@@ -1,0 +1,1439 @@
+{
+    "info":  {
+                 "_postman_id":  "7662c10b-85e3-4670-bb53-e91c784ee0d8",
+                 "name":  "CocheraYa API — Colección Oficial Completa (CS 2031 DBP)",
+                 "description":  "Colección oficial de Postman para el backend de CocheraYa (CS 2031 Desarrollo Basado en Plataforma - Semana 7). Contiene todos los flujos de Autenticación JWT, Gestión Geoespacial de Cocheras con PostGIS, Reservas con Timeout de 15 minutos, Billetera Virtual con Auditoría Financiera, Check-in/Check-out con Códigos QR dinámicos, Reseñas, Chat y Administración.\\n\\n### Configuración Inicial y Automatización\\n1. La variable \baseUrl apunta a http://localhost:8080 por defecto.\\n2. Los scripts de prueba integrados en cada solicitud de Login y Registro extraen automáticamente el token Bearer ({{token}}), el token de refresco ({{refreshToken}}) y el ID de usuario ({{userId}}), guardándolos en las variables de la colección para que las siguientes peticiones autenticadas funcionen inmediatamente sin copiar/pegar manualmente.\\n3. Cada endpoint cuenta con una explicación técnica detallando su importancia en la arquitectura y un ejemplo de funcionamiento.",
+                 "schema":  "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+             },
+    "item":  [
+                 {
+                     "name":  "Auth",
+                     "description":  "Módulo de registro e inicio de sesión. No requiere autenticación previa.",
+                     "item":  [
+                                  {
+                                      "name":  "Registrar Conductor (DRIVER)",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "exec":  [
+                                                                                    "var jsonData = pm.response.json();",
+                                                                                    "if (jsonData \u0026\u0026 jsonData.token) {",
+                                                                                    "    pm.collectionVariables.set(\"token\", jsonData.token);",
+                                                                                    "    console.log(\"Token de Conductor guardado en {{token}}\");",
+                                                                                    "}",
+                                                                                    "if (jsonData \u0026\u0026 jsonData.refreshToken) {",
+                                                                                    "    pm.collectionVariables.set(\"refreshToken\", jsonData.refreshToken);",
+                                                                                    "    console.log(\"refreshToken guardado en {{refreshToken}}\");",
+                                                                                    "}",
+                                                                                    "if (jsonData \u0026\u0026 jsonData.userId) {",
+                                                                                    "    pm.collectionVariables.set(\"userId\", jsonData.userId.toString());",
+                                                                                    "    console.log(\"userId guardado en {{userId}}\");",
+                                                                                    "}"
+                                                                                ],
+                                                                       "type":  "text/javascript"
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "auth":  {
+                                                                   "type":  "noauth"
+                                                               },
+                                                      "method":  "POST",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\n  \"name\": \"Christian Conductor\",\n  \"email\": \"driver@cocheraya.com\",\n  \"password\": \"SecurePassword123\",\n  \"phone\": \"+51987654321\",\n  \"role\": \"DRIVER\"\n}",
+                                                                   "options":  {
+                                                                                   "raw":  {
+                                                                                               "language":  "json"
+                                                                                           }
+                                                                               }
+                                                               },
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/auth/register",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "auth",
+                                                                               "register"
+                                                                           ]
+                                                              },
+                                                      "description":  "Registra un nuevo usuario con rol DRIVER (Conductor). Inicializa su billetera virtual en 0.00 de manera automática y publica el evento de bienvenida."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "name":  "Registrar Anfitrión (HOST)",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "exec":  [
+                                                                                    "var jsonData = pm.response.json();",
+                                                                                    "if (jsonData \u0026\u0026 jsonData.token) {",
+                                                                                    "    pm.collectionVariables.set(\"token\", jsonData.token);",
+                                                                                    "    console.log(\"Token de Anfitrión guardado en {{token}}\");",
+                                                                                    "}",
+                                                                                    "if (jsonData \u0026\u0026 jsonData.refreshToken) {",
+                                                                                    "    pm.collectionVariables.set(\"refreshToken\", jsonData.refreshToken);",
+                                                                                    "    console.log(\"refreshToken guardado en {{refreshToken}}\");",
+                                                                                    "}",
+                                                                                    "if (jsonData \u0026\u0026 jsonData.userId) {",
+                                                                                    "    pm.collectionVariables.set(\"userId\", jsonData.userId.toString());",
+                                                                                    "    console.log(\"userId guardado en {{userId}}\");",
+                                                                                    "}"
+                                                                                ],
+                                                                       "type":  "text/javascript"
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "auth":  {
+                                                                   "type":  "noauth"
+                                                               },
+                                                      "method":  "POST",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\n  \"name\": \"Christian Anfitrion\",\n  \"email\": \"host@cocheraya.com\",\n  \"password\": \"SecurePassword123\",\n  \"phone\": \"+51999999999\",\n  \"role\": \"HOST\"\n}",
+                                                                   "options":  {
+                                                                                   "raw":  {
+                                                                                               "language":  "json"
+                                                                                           }
+                                                                               }
+                                                               },
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/auth/register",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "auth",
+                                                                               "register"
+                                                                           ]
+                                                              },
+                                                      "description":  "Registra un nuevo usuario con rol HOST (Propietario de cochera)."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "name":  "Iniciar Sesión Conductor",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "exec":  [
+                                                                                    "var jsonData = pm.response.json();",
+                                                                                    "if (jsonData \u0026\u0026 jsonData.token) {",
+                                                                                    "    pm.collectionVariables.set(\"token\", jsonData.token);",
+                                                                                    "    console.log(\"Token de Conductor guardado automáticamente en la variable {{token}}\");",
+                                                                                    "}",
+                                                                                    "if (jsonData \u0026\u0026 jsonData.refreshToken) {",
+                                                                                    "    pm.collectionVariables.set(\"refreshToken\", jsonData.refreshToken);",
+                                                                                    "    console.log(\"refreshToken guardado en {{refreshToken}}\");",
+                                                                                    "}",
+                                                                                    "if (jsonData \u0026\u0026 jsonData.userId) {",
+                                                                                    "    pm.collectionVariables.set(\"userId\", jsonData.userId.toString());",
+                                                                                    "}"
+                                                                                ],
+                                                                       "type":  "text/javascript"
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "auth":  {
+                                                                   "type":  "noauth"
+                                                               },
+                                                      "method":  "POST",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\n  \"email\": \"driver@cocheraya.com\",\n  \"password\": \"SecurePassword123\",\n  \"fcmToken\": \"fcm-token-test-123\"\n}",
+                                                                   "options":  {
+                                                                                   "raw":  {
+                                                                                               "language":  "json"
+                                                                                           }
+                                                                               }
+                                                               },
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/auth/login",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "auth",
+                                                                               "login"
+                                                                           ]
+                                                              },
+                                                      "description":  "Autentica al conductor con email y contraseña. Retorna un JWT válido que se guarda automáticamente en la variable de colección `token`."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "name":  "Iniciar Sesión Anfitrión",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "exec":  [
+                                                                                    "var jsonData = pm.response.json();",
+                                                                                    "if (jsonData \u0026\u0026 jsonData.token) {",
+                                                                                    "    pm.collectionVariables.set(\"token\", jsonData.token);",
+                                                                                    "    console.log(\"Token de Anfitrión guardado automáticamente en la variable {{token}}\");",
+                                                                                    "}",
+                                                                                    "if (jsonData \u0026\u0026 jsonData.refreshToken) {",
+                                                                                    "    pm.collectionVariables.set(\"refreshToken\", jsonData.refreshToken);",
+                                                                                    "    console.log(\"refreshToken guardado en {{refreshToken}}\");",
+                                                                                    "}",
+                                                                                    "if (jsonData \u0026\u0026 jsonData.userId) {",
+                                                                                    "    pm.collectionVariables.set(\"userId\", jsonData.userId.toString());",
+                                                                                    "}"
+                                                                                ],
+                                                                       "type":  "text/javascript"
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "auth":  {
+                                                                   "type":  "noauth"
+                                                               },
+                                                      "method":  "POST",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\n  \"email\": \"host@cocheraya.com\",\n  \"password\": \"SecurePassword123\",\n  \"fcmToken\": \"fcm-token-test-456\"\n}",
+                                                                   "options":  {
+                                                                                   "raw":  {
+                                                                                               "language":  "json"
+                                                                                           }
+                                                                               }
+                                                               },
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/auth/login",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "auth",
+                                                                               "login"
+                                                                           ]
+                                                              },
+                                                      "description":  "Autentica al anfitrión con email y contraseña. Retorna un JWT válido que se guarda automáticamente en la variable de colección `token`."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "name":  "Renovar Token de Acceso",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "exec":  [
+                                                                                    "var jsonData = pm.response.json();",
+                                                                                    "if (jsonData \u0026\u0026 jsonData.token) {",
+                                                                                    "    pm.collectionVariables.set(\"token\", jsonData.token);",
+                                                                                    "    console.log(\"Nuevo token de acceso guardado en {{token}}\");",
+                                                                                    "}",
+                                                                                    "if (jsonData \u0026\u0026 jsonData.refreshToken) {",
+                                                                                    "    pm.collectionVariables.set(\"refreshToken\", jsonData.refreshToken);",
+                                                                                    "    console.log(\"refreshToken actualizado en {{refreshToken}}\");",
+                                                                                    "}"
+                                                                                ],
+                                                                       "type":  "text/javascript"
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "auth":  {
+                                                                   "type":  "noauth"
+                                                               },
+                                                      "method":  "POST",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}",
+                                                                   "options":  {
+                                                                                   "raw":  {
+                                                                                               "language":  "json"
+                                                                                           }
+                                                                               }
+                                                               },
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/auth/refresh-token",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "auth",
+                                                                               "refresh-token"
+                                                                           ]
+                                                              },
+                                                      "description":  "Renueva el JWT de acceso utilizando el refresh token guardado en la variable {{refreshToken}}."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  }
+                              ]
+                 },
+                 {
+                     "name":  "Parking Spaces",
+                     "description":  "Módulo de gestión y búsqueda de espacios de estacionamiento.",
+                     "item":  [
+                                  {
+                                      "name":  "Buscar Cocheras Cercanas (PostGIS)",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "exec":  [
+                                                                                    "var jsonData = pm.response.json();",
+                                                                                    "if (jsonData \u0026\u0026 Array.isArray(jsonData) \u0026\u0026 jsonData.length \u003e 0) {",
+                                                                                    "    var firstSpace = jsonData[0];",
+                                                                                    "    if (firstSpace.id) {",
+                                                                                    "        pm.collectionVariables.set(\"parkingSpaceId\", firstSpace.id.toString());",
+                                                                                    "        console.log(\"parkingSpaceId guardado automáticamente: \" + firstSpace.id);",
+                                                                                    "    }",
+                                                                                    "}"
+                                                                                ],
+                                                                       "type":  "text/javascript"
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/parking-spaces/search-nearby?lat=-12.1221\u0026lng=-77.0298\u0026radius=2000",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "parking-spaces",
+                                                                               "search-nearby"
+                                                                           ],
+                                                                  "query":  [
+                                                                                {
+                                                                                    "key":  "lat",
+                                                                                    "value":  "-12.1221",
+                                                                                    "description":  "Latitud del centro de búsqueda (ej. Miraflores, Lima)"
+                                                                                },
+                                                                                {
+                                                                                    "key":  "lng",
+                                                                                    "value":  "-77.0298",
+                                                                                    "description":  "Longitud del centro de búsqueda"
+                                                                                },
+                                                                                {
+                                                                                    "key":  "radius",
+                                                                                    "value":  "2000",
+                                                                                    "description":  "Radio de búsqueda en metros (ej. 2000m = 2km)"
+                                                                                }
+                                                                            ]
+                                                              },
+                                                      "description":  "Busca cocheras en estado AVAILABLE en un radio específico utilizando la base de datos geoespacial PostGIS."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "name":  "Crear Cochera (HOST)",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "exec":  [
+                                                                                    "var jsonData = pm.response.json();",
+                                                                                    "if (jsonData \u0026\u0026 jsonData.id) {",
+                                                                                    "    pm.collectionVariables.set(\"parkingSpaceId\", jsonData.id.toString());",
+                                                                                    "    console.log(\"parkingSpaceId guardado de cochera creada: \" + jsonData.id);",
+                                                                                    "}"
+                                                                                ],
+                                                                       "type":  "text/javascript"
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "POST",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "body":  {
+                                                                   "mode":  "formdata",
+                                                                   "formdata":  [
+                                                                                    {
+                                                                                        "key":  "data",
+                                                                                        "value":  "{\n  \"title\": \"Cochera Residencial Miraflores Central\",\n  \"description\": \"Estacionamiento techado, vigilado 24/7 con control de accesos.\",\n  \"address\": \"Calle Alcanfores 456, Miraflores\",\n  \"pricePerHour\": 6.50,\n  \"latitude\": -12.1221,\n  \"longitude\": -77.0298,\n  \"features\": [\"Vigilancia\", \"Techado\", \"Cámara de Seguridad\"]\n}",
+                                                                                        "description":  "JSON de metadata de la cochera",
+                                                                                        "type":  "text"
+                                                                                    },
+                                                                                    {
+                                                                                        "key":  "photo",
+                                                                                        "description":  "Archivo de imagen de la cochera (MultipartFile opcional)",
+                                                                                        "type":  "file",
+                                                                                        "src":  [
+
+                                                                                                ]
+                                                                                    }
+                                                                                ]
+                                                               },
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/parking-spaces",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "parking-spaces"
+                                                                           ]
+                                                              },
+                                                      "description":  "Permite a un HOST crear una nueva cochera subiendo una foto (Cloudinary) y datos en formato multipart/form-data."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "name":  "Actualizar Cochera (HOST)",
+                                      "request":  {
+                                                      "method":  "PUT",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "body":  {
+                                                                   "mode":  "formdata",
+                                                                   "formdata":  [
+                                                                                    {
+                                                                                        "key":  "data",
+                                                                                        "value":  "{\n  \"title\": \"Cochera Residencial Miraflores Premium\",\n  \"description\": \"Estacionamiento techado con cargador eléctrico para autos híbridos/eléctricos.\",\n  \"address\": \"Calle Alcanfores 456, Miraflores\",\n  \"pricePerHour\": 7.50,\n  \"latitude\": -12.1221,\n  \"longitude\": -77.0298,\n  \"features\": [\"Vigilancia\", \"Techado\", \"Cargador Eléctrico\"]\n}",
+                                                                                        "description":  "JSON de actualización de la cochera",
+                                                                                        "type":  "text"
+                                                                                    },
+                                                                                    {
+                                                                                        "key":  "photo",
+                                                                                        "description":  "Nueva foto de la cochera (reemplaza la anterior si se provee)",
+                                                                                        "type":  "file",
+                                                                                        "src":  [
+
+                                                                                                ]
+                                                                                    }
+                                                                                ]
+                                                               },
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/parking-spaces/{{parkingSpaceId}}",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "parking-spaces",
+                                                                               "{{parkingSpaceId}}"
+                                                                           ]
+                                                              },
+                                                      "description":  "Actualiza la información y/o foto de una cochera. El usuario debe ser el HOST propietario de la misma."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "name":  "Actualizar Disponibilidad (HOST)",
+                                      "request":  {
+                                                      "method":  "PUT",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\n  \"status\": \"AVAILABLE\"\n}",
+                                                                   "options":  {
+                                                                                   "raw":  {
+                                                                                               "language":  "json"
+                                                                                           }
+                                                                               }
+                                                               },
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/parking-spaces/{{parkingSpaceId}}/change-availability",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "parking-spaces",
+                                                                               "{{parkingSpaceId}}",
+                                                                               "change-availability"
+                                                                           ]
+                                                              },
+                                                      "description":  "Cambia manualmente el estado de disponibilidad (AVAILABLE, RESERVED, OCCUPIED) de una cochera. Emite una notificación en tiempo real a través de WebSocket."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "name":  "Listar Mis Cocheras (HOST)",
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/parking-spaces/mine",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "parking-spaces",
+                                                                               "mine"
+                                                                           ]
+                                                              },
+                                                      "description":  "Retorna la lista de cocheras publicadas por el HOST autenticado."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "name":  "Dashboard del Host (HOST)",
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/parking-spaces/host-dashboard",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "parking-spaces",
+                                                                               "host-dashboard"
+                                                                           ]
+                                                              },
+                                                      "description":  "Obtiene las métricas agregadas del HOST (total de cocheras, reservas finalizadas, ganancias acumuladas, rating promedio e historial reciente)."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "name":  "Agregar a Favoritos (DRIVER)",
+                                      "request":  {
+                                                      "method":  "POST",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/parking-spaces/{{parkingSpaceId}}/favorites",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "parking-spaces",
+                                                                               "{{parkingSpaceId}}",
+                                                                               "favorites"
+                                                                           ]
+                                                              },
+                                                      "description":  "Agrega una cochera específica a la lista de favoritos del conductor autenticado."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "name":  "Quitar de Favoritos (DRIVER)",
+                                      "request":  {
+                                                      "method":  "DELETE",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/parking-spaces/{{parkingSpaceId}}/favorites",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "parking-spaces",
+                                                                               "{{parkingSpaceId}}",
+                                                                               "favorites"
+                                                                           ]
+                                                              },
+                                                      "description":  "Elimina una cochera de la lista de favoritos del conductor."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "name":  "Listar Favoritos (DRIVER)",
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/parking-spaces/favorites",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "parking-spaces",
+                                                                               "favorites"
+                                                                           ]
+                                                              },
+                                                      "description":  "Retorna todas las cocheras marcadas como favoritas por el DRIVER autenticado."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "name":  "Ver Detalle de Cochera",
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/parking-spaces/{{parkingSpaceId}}",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "parking-spaces",
+                                                                               "{{parkingSpaceId}}"
+                                                                           ]
+                                                              },
+                                                      "description":  "Retorna el detalle completo de una cochera específica por su ID."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "name":  "Eliminar Cochera (HOST)",
+                                      "request":  {
+                                                      "method":  "DELETE",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/parking-spaces/{{parkingSpaceId}}",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "parking-spaces",
+                                                                               "{{parkingSpaceId}}"
+                                                                           ]
+                                                              },
+                                                      "description":  "Da de baja y elimina una cochera publicada. Requiere ser el HOST dueño de la misma."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  }
+                              ]
+                 },
+                 {
+                     "name":  "Reservations",
+                     "description":  "Módulo para la creación, consulta y cancelación de reservas de estacionamiento.",
+                     "item":  [
+                                  {
+                                      "name":  "Crear Reserva (DRIVER)",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "exec":  [
+                                                                                    "var jsonData = pm.response.json();",
+                                                                                    "if (jsonData \u0026\u0026 jsonData.id) {",
+                                                                                    "    pm.collectionVariables.set(\"reservationId\", jsonData.id.toString());",
+                                                                                    "    console.log(\"reservationId guardado de reserva creada: \" + jsonData.id);",
+                                                                                    "}"
+                                                                                ],
+                                                                       "type":  "text/javascript"
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "POST",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\n  \"parkingSpaceId\": {{parkingSpaceId}}\n}",
+                                                                   "options":  {
+                                                                                   "raw":  {
+                                                                                               "language":  "json"
+                                                                                           }
+                                                                               }
+                                                               },
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/reservations",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "reservations"
+                                                                           ]
+                                                              },
+                                                      "description":  "Crea una reserva en estado PENDING para una cochera disponible. Asigna automáticamente el tiempo de expiración (expiresAt) a 15 minutos en el futuro y cambia el estado de la cochera a RESERVED."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "name":  "Historial de Reservas (DRIVER)",
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/reservations/mine",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "reservations",
+                                                                               "mine"
+                                                                           ]
+                                                              },
+                                                      "description":  "Obtiene el historial de todas las reservas efectuadas por el DRIVER autenticado."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "name":  "Detalle de una Reserva",
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/reservations/{{reservationId}}",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "reservations",
+                                                                               "{{reservationId}}"
+                                                                           ]
+                                                              },
+                                                      "description":  "Retorna los detalles completos de una reserva específica."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "name":  "Cancelar Reserva (DRIVER)",
+                                      "request":  {
+                                                      "method":  "DELETE",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/reservations/{{reservationId}}",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "reservations",
+                                                                               "{{reservationId}}"
+                                                                           ]
+                                                              },
+                                                      "description":  "Permite al conductor cancelar una reserva en estado PENDING. La cochera vuelve a estar AVAILABLE y se cancela la expiración."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "name":  "Historial por Cochera (HOST)",
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/reservations/by-parking-space/{{parkingSpaceId}}",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "reservations",
+                                                                               "by-parking-space",
+                                                                               "{{parkingSpaceId}}"
+                                                                           ]
+                                                              },
+                                                      "description":  "Permite a un HOST ver el historial completo de reservas asociadas a una de sus cocheras."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  }
+                              ]
+                 },
+                 {
+                     "name":  "Check-in \u0026 Check-out",
+                     "description":  "Proceso físico de ingreso y salida del estacionamiento utilizando códigos QR generados dinámicamente.",
+                     "item":  [
+                                  {
+                                      "name":  "Generar Código QR (DRIVER)",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "exec":  [
+                                                                                    "var jsonData = pm.response.json();",
+                                                                                    "if (jsonData \u0026\u0026 jsonData.code) {",
+                                                                                    "    pm.collectionVariables.set(\"qrCode\", jsonData.code);",
+                                                                                    "    console.log(\"qrCode guardado automáticamente: \" + jsonData.code);",
+                                                                                    "}"
+                                                                                ],
+                                                                       "type":  "text/javascript"
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "POST",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/check-in-out/{{reservationId}}/qr",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "check-in-out",
+                                                                               "{{reservationId}}",
+                                                                               "qr"
+                                                                           ]
+                                                              },
+                                                      "description":  "Genera el registro del código QR dinámico para la reserva activa con un UUID único y expiración a 30 minutos. Retorna el UUID y la representación gráfica en base64 de la imagen del QR generada con ZXing."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "name":  "Hacer Check-In",
+                                      "request":  {
+                                                      "method":  "POST",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\n  \"code\": \"{{qrCode}}\"\n}",
+                                                                   "options":  {
+                                                                                   "raw":  {
+                                                                                               "language":  "json"
+                                                                                           }
+                                                                               }
+                                                               },
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/check-in-out/check-in",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "check-in-out",
+                                                                               "check-in"
+                                                                           ]
+                                                              },
+                                                      "description":  "Registra el ingreso del conductor escaneando el código QR de entrada."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "name":  "Hacer Check-Out",
+                                      "request":  {
+                                                      "method":  "POST",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\n  \"code\": \"{{qrCode}}\"\n}",
+                                                                   "options":  {
+                                                                                   "raw":  {
+                                                                                               "language":  "json"
+                                                                                           }
+                                                                               }
+                                                               },
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/check-in-out/check-out",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "check-in-out",
+                                                                               "check-out"
+                                                                           ]
+                                                              },
+                                                      "description":  "Registra la salida del vehículo. Valida el código QR, calcula los minutos transcurridos y el costo total de acuerdo con la tarifa por hora, realiza el cobro debitando de la billetera del DRIVER y acreditando a la billetera del HOST, actualiza el estado de la reserva a FINISHED y libera la cochera (AVAILABLE)."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  }
+                              ]
+                 },
+                 {
+                     "name":  "Wallet",
+                     "description":  "Módulo financiero para la consulta de saldos, recargas e historial de auditoría de transacciones.",
+                     "item":  [
+                                  {
+                                      "name":  "Consultar Saldo",
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/wallet/balance",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "wallet",
+                                                                               "balance"
+                                                                           ]
+                                                              },
+                                                      "description":  "Retorna el saldo de la billetera virtual del usuario autenticado."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "name":  "Recargar Saldo (TOPUP)",
+                                      "request":  {
+                                                      "method":  "POST",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\n  \"amount\": 50.00\n}",
+                                                                   "options":  {
+                                                                                   "raw":  {
+                                                                                               "language":  "json"
+                                                                                           }
+                                                                               }
+                                                               },
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/wallet/top-up",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "wallet",
+                                                                               "top-up"
+                                                                           ]
+                                                              },
+                                                      "description":  "Recarga saldo a la billetera del usuario actual. Genera una transacción de auditoría con tipo TOPUP."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "name":  "Historial de Transacciones",
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/wallet/transactions?page=0\u0026size=10",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "wallet",
+                                                                               "transactions"
+                                                                           ],
+                                                                  "query":  [
+                                                                                {
+                                                                                    "key":  "page",
+                                                                                    "value":  "0",
+                                                                                    "description":  "Número de página (0 es la primera)"
+                                                                                },
+                                                                                {
+                                                                                    "key":  "size",
+                                                                                    "value":  "10",
+                                                                                    "description":  "Elementos por página"
+                                                                                }
+                                                                            ]
+                                                              },
+                                                      "description":  "Retorna el historial paginado de transacciones del usuario, ordenadas de más reciente a más antigua."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "name":  "Historial por Tipo de Transacción",
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/wallet/transactions/TOPUP?page=0\u0026size=10",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "wallet",
+                                                                               "transactions",
+                                                                               "TOPUP"
+                                                                           ],
+                                                                  "query":  [
+                                                                                {
+                                                                                    "key":  "page",
+                                                                                    "value":  "0"
+                                                                                },
+                                                                                {
+                                                                                    "key":  "size",
+                                                                                    "value":  "10"
+                                                                                }
+                                                                            ]
+                                                              },
+                                                      "description":  "Retorna las transacciones del usuario filtradas por el tipo especificado en la ruta (TOPUP, CHARGE, REFUND)."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "name":  "Resumen de Ganancias (HOST)",
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/wallet/earnings",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "wallet",
+                                                                               "earnings"
+                                                                           ]
+                                                              },
+                                                      "description":  "Permite al HOST ver sus métricas de cobros, incluyendo ganancias totales del mes y cantidad total de cobros recibidos."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  }
+                              ]
+                 },
+                 {
+                     "name":  "Reviews",
+                     "description":  "Módulo de reputación y reseñas de cocheras y usuarios.",
+                     "item":  [
+                                  {
+                                      "name":  "Crear Reseña (DRIVER)",
+                                      "request":  {
+                                                      "method":  "POST",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\n  \"reservationId\": {{reservationId}},\n  \"rating\": 5,\n  \"comment\": \"Todo estuvo excelente. Cochera techada y la atención muy amable.\"\n}",
+                                                                   "options":  {
+                                                                                   "raw":  {
+                                                                                               "language":  "json"
+                                                                                           }
+                                                                               }
+                                                               },
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/reviews",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "reviews"
+                                                                           ]
+                                                              },
+                                                      "description":  "Crea una reseña sobre el espacio y la experiencia de estacionamiento una vez finalizada la reserva (status FINISHED)."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "name":  "Listar Reseñas por Cochera",
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/reviews/by-parking-space/{{parkingSpaceId}}",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "reviews",
+                                                                               "by-parking-space",
+                                                                               "{{parkingSpaceId}}"
+                                                                           ]
+                                                              },
+                                                      "description":  "Obtiene la lista completa de reseñas y la calificación promedio para una cochera específica."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "name":  "Listar Reseñas por Usuario",
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/reviews/by-user/{{userId}}",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "reviews",
+                                                                               "by-user",
+                                                                               "{{userId}}"
+                                                                           ]
+                                                              },
+                                                      "description":  "Retorna la lista de reseñas escritas por o destinadas a un usuario en particular."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  }
+                              ]
+                 },
+                 {
+                     "name":  "Chat \u0026 Mensajería",
+                     "description":  "Comunicación bidireccional entre el conductor (DRIVER) y el anfitrión (HOST) vinculada a una reserva activa.",
+                     "item":  [
+                                  {
+                                      "name":  "Enviar Mensaje en Reserva",
+                                      "request":  {
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "method":  "POST",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\"content\": \"Hola, ya me encuentro a 2 cuadras de la cochera.\"}"
+                                                               },
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/reservations/{{reservationId}}/messages",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "reservations",
+                                                                               "{{reservationId}}",
+                                                                               "messages"
+                                                                           ]
+                                                              },
+                                                      "description":  "Permite enviar un mensaje de texto instantáneo entre las partes asociadas a la reserva. Genera notificación push en tiempo real."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "name":  "Obtener Historial de Mensajes",
+                                      "request":  {
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/reservations/{{reservationId}}/messages",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "reservations",
+                                                                               "{{reservationId}}",
+                                                                               "messages"
+                                                                           ]
+                                                              },
+                                                      "description":  "Recupera la lista cronológica completa de mensajes intercambiados durante la reserva."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  }
+                              ]
+                 },
+                 {
+                     "name":  "Administración (ADMIN)",
+                     "description":  "Endpoints exclusivos para usuarios con rol ADMIN. Requiere token con claim de rol ADMIN.",
+                     "item":  [
+                                  {
+                                      "name":  "Listar Todos los Usuarios",
+                                      "request":  {
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/admin/users",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "admin",
+                                                                               "users"
+                                                                           ]
+                                                              },
+                                                      "description":  "Devuelve el directorio consolidado de usuarios registrados en el sistema con sus respectivos roles y estados de habilitación."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  },
+                                  {
+                                      "name":  "Deshabilitar Usuario",
+                                      "request":  {
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "method":  "PATCH",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  {
+                                                                  "raw":  "{{baseUrl}}/api/v1/admin/users/{{userId}}/disable",
+                                                                  "host":  [
+                                                                               "{{baseUrl}}"
+                                                                           ],
+                                                                  "path":  [
+                                                                               "api",
+                                                                               "v1",
+                                                                               "admin",
+                                                                               "users",
+                                                                               "{{userId}}",
+                                                                               "disable"
+                                                                           ]
+                                                              },
+                                                      "description":  "Inhabilita la cuenta de un usuario por infracción de normas. Devuelve código HTTP 204 No Content."
+                                                  },
+                                      "response":  [
+
+                                                   ]
+                                  }
+                              ]
+                 }
+             ],
+    "auth":  {
+                 "type":  "bearer",
+                 "bearer":  [
+                                {
+                                    "key":  "token",
+                                    "value":  "{{token}}",
+                                    "type":  "string"
+                                }
+                            ]
+             },
+    "event":  [
+                  {
+                      "listen":  "prerequest",
+                      "script":  {
+                                     "type":  "text/javascript",
+                                     "exec":  [
+                                                  ""
+                                              ]
+                                 }
+                  },
+                  {
+                      "listen":  "test",
+                      "script":  {
+                                     "type":  "text/javascript",
+                                     "exec":  [
+                                                  ""
+                                              ]
+                                 }
+                  }
+              ],
+    "variable":  [
+                     {
+                         "key":  "baseUrl",
+                         "value":  "http://localhost:8080",
+                         "type":  "string"
+                     },
+                     {
+                         "key":  "token",
+                         "value":  "jwt-token-aqui",
+                         "type":  "string"
+                     },
+                     {
+                         "key":  "parkingSpaceId",
+                         "value":  "1",
+                         "type":  "string"
+                     },
+                     {
+                         "key":  "reservationId",
+                         "value":  "1",
+                         "type":  "string"
+                     },
+                     {
+                         "key":  "userId",
+                         "value":  "1",
+                         "type":  "string"
+                     },
+                     {
+                         "key":  "qrCode",
+                         "value":  "qr-uuid-aqui",
+                         "type":  "string"
+                     }
+                 ]
+}
