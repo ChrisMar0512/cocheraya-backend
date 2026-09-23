@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Comprobante de Estacionamiento — CocheraYa</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; color: #1e293b;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f1f5f9; padding: 40px 15px;">
+        <tr>
+            <td align="center">
+                <table width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04); border: 1px solid #e2e8f0;">
+                    <!-- Brand Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%); padding: 32px 30px; text-align: center;">
+                            <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -0.5px;">🚗 CocheraYa</h1>
+                            <p style="color: #94a3b8; margin: 6px 0 0; font-size: 14px;">Comprobante Digital de Servicio</p>
+                        </td>
+                    </tr>
+
+                    <!-- Body Content -->
+                    <tr>
+                        <td style="padding: 36px 32px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                <h2 style="color: #0f172a; margin: 0; font-size: 20px; font-weight: 700;">
+                                    Resumen de tu Estacionamiento
+                                </h2>
+                            </div>
+                            <p style="color: #475569; font-size: 15px; line-height: 1.6; margin: 0 0 24px;">
+                                Hola, <strong th:text="${userName}" style="color: #0f172a;">Usuario</strong>. Tu sesión de estacionamiento ha finalizado satisfactoriamente. A continuación te presentamos el desglose oficial:
+                            </p>
+
+                            <!-- Receipt Card -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; margin-bottom: 24px;">
+                                <tr>
+                                    <td style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 14px; font-weight: 500;">
+                                        Cochera Utilizada
+                                    </td>
+                                    <td align="right" style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-size: 14px; font-weight: 700;" th:text="${parkingSpaceName}">
+                                        Cochera Centro Miraflores
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 14px; font-weight: 500;">
+                                        Tiempo Efectivo
+                                    </td>
+                                    <td align="right" style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-size: 14px; font-weight: 600;">
+                                        <span th:text="${minutes}">45</span> minutos
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 14px; font-weight: 500;">
+                                        Monto Cobrado (Billetera)
+                                    </td>
+                                    <td align="right" style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0; color: #2563eb; font-size: 18px; font-weight: 800;">
+                                        S/. <span th:text="${totalCharged}">6.50</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 16px 20px; color: #64748b; font-size: 14px; font-weight: 500;">
+                                        Saldo Disponible Restante
+                                    </td>
+                                    <td align="right" style="padding: 16px 20px; color: #059669; font-size: 15px; font-weight: 700;">
+                                        S/. <span th:text="${remainingBalance}">43.50</span>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <div style="background-color: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 14px 18px; margin-bottom: 24px; text-align: center;">
+                                <span style="color: #1d4ed8; font-size: 13px; font-weight: 600;">
+                                    ✓ Pago procesado atómicamente y auditado en tu Billetera Virtual CocheraYa
+                                </span>
+                            </div>
+
+                            <p style="color: #64748b; font-size: 14px; line-height: 1.6; margin: 0; text-align: center;">
+                                ¡Gracias por confiar en CocheraYa para estacionar seguro y rápido en Lima!
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #f8fafc; border-top: 1px solid #e2e8f0; padding: 24px 32px; text-align: center;">
+                            <p style="color: #94a3b8; font-size: 13px; margin: 0 0 6px;">
+                                © 2026 <strong>CocheraYa</strong> — Lima Metropolitana, Perú.
+                            </p>
+                            <p style="color: #cbd5e1; font-size: 12px; margin: 0;">
+                                CS 2031 Desarrollo Basado en Plataforma
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
