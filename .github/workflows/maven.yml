@@ -1,0 +1,54 @@
+name: CI/CD CocheraYa Backend
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgis/postgis:16-3.4-alpine
+        env:
+          POSTGRES_DB: cocheraya_test
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Configurar JDK 21 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Compilar y ejecutar pruebas automatizadas
+        run: mvn clean test -B
+        env:
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/cocheraya_test
+          SPRING_DATASOURCE_USERNAME: test
+          SPRING_DATASOURCE_PASSWORD: test
+          APP_JWT_SECRET: c2VjdXJlX2tleV9mb3JfY29jaGVyYXlhX2JhY2tlbmRfcHJvamVjdF8yMDI2X2RlcGxveW1lbnRfc2VjcmV0XzI1Ng==
+
+      - name: Empaquetar artefacto JAR
+        run: mvn package -DskipTests -B
+
+      - name: Subir artefacto JAR para Release
+        uses: actions/upload-artifact@v4
+        with:
+          name: cocheraya-backend-jar
+          path: target/*.jar
