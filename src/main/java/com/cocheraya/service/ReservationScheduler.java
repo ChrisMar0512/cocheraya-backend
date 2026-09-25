@@ -35,6 +35,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReservationScheduler {
 
+    private static final long CHECK_INTERVAL_MS = 60_000L;
+    private static final int EXPIRATION_WARNING_MINUTES = 5;
+    private static final String PARKING_UPDATES_TOPIC = "/topic/parking-updates";
+
     private final ReservationRepository reservationRepository;
     private final ParkingSpaceRepository parkingSpaceRepository;
     private final FirebaseNotificationService firebaseNotificationService;
@@ -52,7 +56,7 @@ public class ReservationScheduler {
      * fixedRate = 60000 ms = 1 minuto — en el peor caso una cochera queda
      * bloqueada hasta ~1 minuto después de que la reserva realmente expiró.
      */
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = CHECK_INTERVAL_MS)
     @Transactional
     public void checkExpiredReservations() {
         LocalDateTime now = LocalDateTime.now();
@@ -77,7 +81,7 @@ public class ReservationScheduler {
                     space.getId(),
                     ParkingSpaceStatus.AVAILABLE.name()
             );
-            messagingTemplate.convertAndSend("/topic/parking-updates", event);
+            messagingTemplate.convertAndSend(PARKING_UPDATES_TOPIC, event);
         }
 
         log.info("⏰ Scheduler: {} reservas expiradas procesadas y cocheras liberadas", expired.size());
@@ -94,11 +98,11 @@ public class ReservationScheduler {
      * un fallo en Firebase (token inválido, error de red, cuota excedida)
      * no afecte la limpieza de reservas expiradas que es operación crítica.
      */
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = CHECK_INTERVAL_MS)
     @Transactional(readOnly = true)
     public void sendExpirationWarnings() {
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime fiveMinutesLater = now.plusMinutes(5);
+        LocalDateTime fiveMinutesLater = now.plusMinutes(EXPIRATION_WARNING_MINUTES);
 
         List<Reservation> aboutToExpire =
                 reservationRepository.findPendingReservationsExpiringIn5Minutes(now, fiveMinutesLater);

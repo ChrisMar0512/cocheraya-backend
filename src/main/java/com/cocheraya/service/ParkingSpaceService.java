@@ -43,6 +43,9 @@ import java.util.stream.Collectors;
 @Transactional
 public class ParkingSpaceService implements IParkingSpaceService {
 
+    private static final int RECENT_RESERVATIONS_LIMIT = 5;
+    private static final int WGS84_SRID = 4326;
+
     private final ParkingSpaceRepository parkingSpaceRepository;
     private final FeatureRepository featureRepository;
     private final UserRepository userRepository;
@@ -81,7 +84,7 @@ public class ParkingSpaceService implements IParkingSpaceService {
         space.setLocation(buildPoint(request.getLongitude(), request.getLatitude()));
 
         
-        if (photo != null && !photo.isEmpty()) {
+        if (hasPhoto(photo)) {
             String[] uploadResult = cloudinaryService.uploadImageWithPublicId(photo);
             space.setPhotoUrl(uploadResult[0]);
             space.setCloudinaryPublicId(uploadResult[1]);
@@ -128,7 +131,7 @@ public class ParkingSpaceService implements IParkingSpaceService {
         }
 
         
-        if (photo != null && !photo.isEmpty()) {
+        if (hasPhoto(photo)) {
             
             if (space.getCloudinaryPublicId() != null) {
                 cloudinaryService.deleteImage(space.getCloudinaryPublicId());
@@ -220,7 +223,7 @@ public class ParkingSpaceService implements IParkingSpaceService {
 
         
         List<ReservationSummary> recentReservations = reservationRepository
-                .findRecentByHostId(hostId, 5)
+                .findRecentByHostId(hostId, RECENT_RESERVATIONS_LIMIT)
                 .stream()
                 .map(this::mapToReservationSummary)
                 .collect(Collectors.toList());
@@ -242,13 +245,10 @@ public class ParkingSpaceService implements IParkingSpaceService {
         ParkingSpace space = findSpaceAndVerifyOwnership(id);
 
         
-        long activeReservations = reservationRepository.findAll().stream()
-                .filter(r -> r.getParkingSpace().getId().equals(id) && 
-                        (r.getStatus() == Reservation.ReservationStatus.PENDING || 
-                         r.getStatus() == Reservation.ReservationStatus.ACTIVE))
-                .count();
+        boolean hasActiveReservations = reservationRepository.findAll().stream()
+                .anyMatch(reservation -> isActiveReservationForSpace(reservation, id));
 
-        if (activeReservations > 0) {
+        if (hasActiveReservations) {
             throw new IllegalStateException("No se puede eliminar la cochera porque tiene reservas activas o pendientes.");
         }
 
@@ -295,6 +295,20 @@ public class ParkingSpaceService implements IParkingSpaceService {
         return space;
     }
 
+    private boolean hasPhoto(MultipartFile photo) {
+        return photo != null && !photo.isEmpty();
+    }
+
+    private boolean isActiveReservationForSpace(Reservation reservation, Long parkingSpaceId) {
+        if (!reservation.getParkingSpace().getId().equals(parkingSpaceId)) {
+            return false;
+        }
+
+        Reservation.ReservationStatus status = reservation.getStatus();
+        return status == Reservation.ReservationStatus.PENDING
+                || status == Reservation.ReservationStatus.ACTIVE;
+    }
+
     /**
      * Construye un Point de JTS con SRID 4326 (WGS84).
      * Nota: en WGS84, X = longitud, Y = latitud.
@@ -307,7 +321,7 @@ public class ParkingSpaceService implements IParkingSpaceService {
         GeometryFactory geometryFactory = new GeometryFactory();
         Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
         // SRID 4326 = WGS84, el sistema de referencia estándar de GPS
-        point.setSRID(4326);
+        point.setSRID(WGS84_SRID);
         return point;
     }
 

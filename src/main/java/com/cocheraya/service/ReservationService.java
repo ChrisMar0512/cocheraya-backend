@@ -60,6 +60,7 @@ public class ReservationService implements IReservationService {
 
     /** Tiempo de expiración de una reserva PENDING (en minutos) */
     private static final int EXPIRATION_MINUTES = 15;
+    private static final String PARKING_UPDATES_TOPIC = "/topic/parking-updates";
 
     
 
@@ -227,7 +228,7 @@ public class ReservationService implements IReservationService {
      */
     private void emitParkingUpdate(Long parkingSpaceId, String newStatus) {
         ParkingUpdateEvent event = new ParkingUpdateEvent(parkingSpaceId, newStatus);
-        messagingTemplate.convertAndSend("/topic/parking-updates", event);
+        messagingTemplate.convertAndSend(PARKING_UPDATES_TOPIC, event);
     }
 
     
