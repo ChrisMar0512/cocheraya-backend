@@ -254,6 +254,7 @@ docker compose up -d --build
 
 # 3. Acceso 
 # Swagger UI:  http://100.56.248.121:8080/swagger-ui/index.html
+# OpenAPI Docs: http://localhost:8080/v3/api-docs
 ```
 
 ### Variables de Entorno Requeridas
@@ -268,14 +269,14 @@ docker compose up -d --build
 
 ## Deployment
 
-El backend de **CocheraYa** está desplegado en **AWS EC2** utilizando **Docker**. La base de datos se encuentra alojada en **Amazon RDS PostgreSQL**.
+El backend fue desplegado en **AWS EC2** utilizando **Docker**, mientras que la base de datos se encuentra alojada en **Amazon RDS PostgreSQL**.
 
-### URL
+### Acceso en Producción
 
-- **Swagger UI:** `http://100.56.248.121:8080/swagger-ui/index.html`
-
----
-
+- Swagger UI: http://100.56.248.121:8080/swagger-ui/index.html
+- OpenAPI Docs: http://100.56.248.121:8080/v3/api-docs
+- API Base URL: http://100.56.248.121:8080
+  
 ## 11. Conclusión
 
 ### Logros del Proyecto
