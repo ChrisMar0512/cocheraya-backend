@@ -244,17 +244,20 @@ El flujo `.github/workflows/maven.yml` automatiza la integración continua. Ante
 ### Instrucciones de Instalación y Ejecución Local
 Para desplegar el entorno completo en local con Docker Compose:
 ```bash
-# 1. Clonar repositorio y preparar variables de entorno
+# 1. Clonar el repositorio
 git clone https://github.com/ChrisMar0512/cocheraya-backend.git
 cd cocheraya-backend
+
+# 2. Configurar variables de entorno
 cp .env.example .env
 
-# 2. Iniciar base de datos PostGIS y backend
+# 3. Construir e iniciar los contenedores
 docker compose up -d --build
 
-# 3. Acceso 
-# Swagger UI:  http://100.56.248.121:8080/swagger-ui/index.html
-# OpenAPI Docs: http://localhost:8080/v3/api-docs
+# Una vez iniciado el proyecto:
+
+- Swagger UI: http://localhost:8080/swagger-ui/index.html
+- OpenAPI Docs: http://localhost:8080/v3/api-docs
 ```
 
 ### Variables de Entorno Requeridas
