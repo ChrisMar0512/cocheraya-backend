@@ -266,9 +266,14 @@ docker compose up -d --build
 | `APP_JWT_EXPIRATION` | Vigencia de token en milisegundos | `86400000` (24 horas) |
 | `CORS_ALLOWED_ORIGINS` | Orígenes cliente autorizados | `http://localhost:3000,http://localhost:5173` |
 
-### Enlace de Despliegue
-* **Infraestructura Cloud:** La plataforma cuenta con Dockerfile multi-stage, perfiles productivos (`application-prod.properties`) y script de aprovisionamiento en AWS EC2 (`scripts/deploy-aws.sh`) y plataformas PaaS (Render / Railway).
-* **URL de Acceso en Producción:** [CocheraYa API en Producción](https://cocheraya-backend.onrender.com) *(o acceso vía IP pública AWS EC2 en puerto 8080: `http://<ec2-ip>:8080/swagger-ui/index.html`)*.
+## Deployment
+
+El backend de **CocheraYa** está desplegado en **AWS EC2** utilizando **Docker**. La base de datos se encuentra alojada en **Amazon RDS PostgreSQL**.
+
+### URLs
+
+- **API Base:** `http://100.56.248.121:8080`
+- **Swagger UI:** `http://100.56.248.121:8080/swagger-ui/index.html`
 
 ---
 
