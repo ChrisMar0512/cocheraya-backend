@@ -252,7 +252,7 @@ cp .env.example .env
 # 2. Iniciar base de datos PostGIS y backend
 docker compose up -d --build
 
-# 3. Acceso local
+# 3. Acceso 
 # Swagger UI:  http://100.56.248.121:8080/swagger-ui/index.html
 ```
 
