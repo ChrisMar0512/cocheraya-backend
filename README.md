@@ -270,9 +270,8 @@ docker compose up -d --build
 
 El backend de **CocheraYa** está desplegado en **AWS EC2** utilizando **Docker**. La base de datos se encuentra alojada en **Amazon RDS PostgreSQL**.
 
-### URLs
+### URL
 
-- **API Base:** `http://100.56.248.121:8080`
 - **Swagger UI:** `http://100.56.248.121:8080/swagger-ui/index.html`
 
 ---
