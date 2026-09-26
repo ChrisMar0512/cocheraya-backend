@@ -5,11 +5,13 @@
 ## 1. Portada
 
 * **Título del Proyecto:** CocheraYa — Marketplace Inteligente y Colaborativo de Estacionamiento On-Demand en Lima Metropolitana
-* **Curso:** CS 2031 Desarrollo Basado en Plataforma
-* **Periodo:** 2026-1
+* **Curso:** CS 2031 Desarrollo Basado en Plataformas
+* **Periodo:** 2026-2
 * **Institución:** Universidad de Ingeniería y Tecnología (UTEC) — Lima, Perú
-* **Integrante:** 
+* **Integrantes:** 
   * Christian Mar Carrillo (christian.mar@utec.edu.pe)
+  * Luciano Rivera Valentin (luciano.rivera@utec.edu.pe)
+  * Anthony Caypane Ramirez (anthony.caypane@utec.edu.pe)
 
 ---
 

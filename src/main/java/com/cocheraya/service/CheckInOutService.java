@@ -30,16 +30,31 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
+import java.util.EnumSet;
 import java.util.Optional;
-import java.util.UUID;
+import java.util.Set;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class CheckInOutService implements ICheckInOutService {
+
+    private static final int QR_EXPIRATION_MINUTES = 30;
+    private static final int QR_CODE_LENGTH = 8;
+    private static final int QR_IMAGE_SIZE = 300;
+    private static final int MINUTES_PER_HOUR = 60;
+    private static final int MONEY_SCALE = 2;
+    private static final String QR_CODE_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private static final String PARKING_UPDATES_TOPIC = "/topic/parking-updates";
+    private static final Set<ReservationStatus> QR_ALLOWED_STATUSES = EnumSet.of(
+            ReservationStatus.PENDING,
+            ReservationStatus.ACTIVE
+    );
+    private static final SecureRandom CODE_RANDOM = new SecureRandom();
 
     private final QRCodeRepository qrCodeRepository;
     private final ReservationRepository reservationRepository;
@@ -53,7 +68,7 @@ public class CheckInOutService implements ICheckInOutService {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Reserva no encontrada con id: " + reservationId));
 
-        if (reservation.getStatus() != ReservationStatus.PENDING && reservation.getStatus() != ReservationStatus.ACTIVE) {
+        if (!QR_ALLOWED_STATUSES.contains(reservation.getStatus())) {
             throw new InvalidOperationException("Solo se puede generar QR para reservas pendientes o activas");
         }
 
@@ -63,7 +78,7 @@ public class CheckInOutService implements ICheckInOutService {
             // If the QR has expired, regenerate a new short alphanumeric code, renew expiration, and reset used flags.
             if (qr.getExpiresAt().isBefore(LocalDateTime.now())) {
                 qr.setCode(generateUniqueShortCode());
-                qr.setExpiresAt(LocalDateTime.now().plusMinutes(30));
+                qr.setExpiresAt(LocalDateTime.now().plusMinutes(QR_EXPIRATION_MINUTES));
                 qr.setUsedForCheckin(false);
                 qr.setUsedForCheckout(false);
                 qr = qrCodeRepository.save(qr);
@@ -83,7 +98,7 @@ public class CheckInOutService implements ICheckInOutService {
         QRCode qrCode = new QRCode();
         qrCode.setReservation(reservation);
         qrCode.setCode(code);
-        qrCode.setExpiresAt(LocalDateTime.now().plusMinutes(30));
+        qrCode.setExpiresAt(LocalDateTime.now().plusMinutes(QR_EXPIRATION_MINUTES));
         qrCodeRepository.save(qrCode);
 
         try {
@@ -98,14 +113,13 @@ public class CheckInOutService implements ICheckInOutService {
     }
 
     private String generateUniqueShortCode() {
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        java.security.SecureRandom random = new java.security.SecureRandom();
         String code;
         boolean exists;
         do {
-            StringBuilder sb = new StringBuilder(8);
-            for (int i = 0; i < 8; i++) {
-                sb.append(chars.charAt(random.nextInt(chars.length())));
+            StringBuilder sb = new StringBuilder(QR_CODE_LENGTH);
+            for (int i = 0; i < QR_CODE_LENGTH; i++) {
+                int characterIndex = CODE_RANDOM.nextInt(QR_CODE_CHARACTERS.length());
+                sb.append(QR_CODE_CHARACTERS.charAt(characterIndex));
             }
             code = sb.toString();
             exists = qrCodeRepository.findByCode(code).isPresent();
@@ -115,7 +129,12 @@ public class CheckInOutService implements ICheckInOutService {
 
     private String generateQrBase64Image(String text) throws Exception {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
-        var bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, 300, 300);
+        var bitMatrix = qrCodeWriter.encode(
+                text,
+                BarcodeFormat.QR_CODE,
+                QR_IMAGE_SIZE,
+                QR_IMAGE_SIZE
+        );
         ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
         MatrixToImageWriter.writeToStream(bitMatrix, "PNG", pngOutputStream);
         byte[] pngData = pngOutputStream.toByteArray();
@@ -147,7 +166,7 @@ public class CheckInOutService implements ICheckInOutService {
         reservationRepository.save(reservation);
 
         ParkingUpdateEvent event = new ParkingUpdateEvent(parkingSpace.getId(), ParkingSpaceStatus.OCCUPIED.name());
-        messagingTemplate.convertAndSend("/topic/parking-updates", event);
+        messagingTemplate.convertAndSend(PARKING_UPDATES_TOPIC, event);
 
         CheckInResponse response = new CheckInResponse();
         response.setMessage("Check-in exitoso");
@@ -171,13 +190,12 @@ public class CheckInOutService implements ICheckInOutService {
         }
 
         
-        long minutosUsados = ChronoUnit.MINUTES.between(reservation.getStartTime(), LocalDateTime.now());
-        if (minutosUsados == 0) {
-            minutosUsados = 1;
-        }
+        long minutosUsados = calculateUsedMinutes(reservation);
 
-        BigDecimal pricePerMinute = reservation.getParkingSpace().getPricePerHour().divide(BigDecimal.valueOf(60), 2, RoundingMode.HALF_UP);
-        BigDecimal costoTotal = pricePerMinute.multiply(BigDecimal.valueOf(minutosUsados)).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal pricePerMinute = reservation.getParkingSpace().getPricePerHour()
+                .divide(BigDecimal.valueOf(MINUTES_PER_HOUR), MONEY_SCALE, RoundingMode.HALF_UP);
+        BigDecimal costoTotal = pricePerMinute.multiply(BigDecimal.valueOf(minutosUsados))
+                .setScale(MONEY_SCALE, RoundingMode.HALF_UP);
 
         Long driverId = reservation.getDriver().getId();
         WalletResponse walletResponse = walletService.charge(driverId, costoTotal, reservation);
@@ -196,7 +214,7 @@ public class CheckInOutService implements ICheckInOutService {
         reservationRepository.save(reservation);
 
         ParkingUpdateEvent event = new ParkingUpdateEvent(parkingSpace.getId(), ParkingSpaceStatus.AVAILABLE.name());
-        messagingTemplate.convertAndSend("/topic/parking-updates", event);
+        messagingTemplate.convertAndSend(PARKING_UPDATES_TOPIC, event);
 
         CheckOutResponse response = modelMapper.map(reservation, CheckOutResponse.class);
         response.setDurationMinutes(minutosUsados);
@@ -218,5 +236,13 @@ public class CheckInOutService implements ICheckInOutService {
         ));
 
         return response;
+    }
+
+    private long calculateUsedMinutes(Reservation reservation) {
+        long usedMinutes = ChronoUnit.MINUTES.between(
+                reservation.getStartTime(),
+                LocalDateTime.now()
+        );
+        return usedMinutes == 0 ? 1 : usedMinutes;
     }
 }
