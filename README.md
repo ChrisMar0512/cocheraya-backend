@@ -280,19 +280,22 @@ El backend fue desplegado en **AWS EC2** utilizando **Docker**, mientras que la 
 ## 11. Conclusión
 
 ### Logros del Proyecto
-* Culminación exitosa de un backend empresarial para estacionamiento colaborativo en Lima, satisfaciendo la totalidad de los criterios de la rúbrica de la Semana 7.
-* Integración fluida de indexación geoespacial con PostGIS, concurrencia pesimista blindada, manejo global de errores y suite de 48 pruebas unitarias aprobadas.
-* Documentación interactiva en Swagger UI y colección Postman estructurada con 36 endpoints completamente documentados.
+
+- Desarrollo e implementación de un backend para una plataforma colaborativa de estacionamientos, integrando funcionalidades de autenticación, reservas, gestión de espacios, billetera virtual, chat y notificaciones.
+- Integración de PostgreSQL con PostGIS para el manejo de información geoespacial, junto con mecanismos de concurrencia, validaciones y manejo global de excepciones para garantizar la consistencia de los datos.
+- Implementación de pruebas unitarias, documentación interactiva mediante Swagger UI y una colección de Postman para facilitar la validación y consumo de la API.
 
 ### Aprendizajes Clave
-* Optimización del modelo relacional aplicando `FetchType.LAZY` para neutralizar problemas de consultas N+1.
-* Ventajas de la arquitectura orientada a eventos para mantener controladores delgados y servicios desacoplados.
-* Relevancia de un libro contable inmutable (`balanceAfter`) para asegurar la trazabilidad de operaciones financieras.
+
+- Comprensión de la importancia de optimizar el acceso a datos utilizando estrategias como `FetchType.LAZY` para reducir consultas innecesarias y mejorar el rendimiento.
+- Aplicación de una arquitectura basada en eventos para desacoplar componentes y mantener una mejor organización del código.
+- Diseño de un sistema de transacciones con trazabilidad mediante el registro del balance después de cada operación, asegurando un historial consistente de los movimientos realizados.
 
 ### Trabajo Futuro
-* Incorporación de algoritmos de tarificación dinámica con Machine Learning según densidad de tráfico zonal.
-* Integración de pasarelas de pago locales peruanas (Yape / Plin) mediante Webhooks seguros.
-* Habilitación de reservas para puntos de carga de vehículos eléctricos.
+
+- Implementar un sistema de tarifas dinámicas basado en la demanda y las condiciones de cada zona.
+- Integrar pasarelas de pago locales, como Yape y Plin, para facilitar las transacciones de los usuarios.
+- Incorporar nuevas funcionalidades orientadas a la movilidad urbana, como la reserva de espacios para estaciones de carga de vehículos eléctricos.
 
 ---
 
