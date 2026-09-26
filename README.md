@@ -253,7 +253,7 @@ cp .env.example .env
 docker compose up -d --build
 
 # 3. Acceso local
-# Swagger UI: http://localhost:8080/swagger-ui/index.html
+# Swagger UI:  http://100.56.248.121:8080/swagger-ui/index.html
 ```
 
 ### Variables de Entorno Requeridas
