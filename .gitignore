@@ -6,11 +6,9 @@
 firebase-service-account.json
 src/main/resources/firebase-service-account.json
 
-# SEGURIDAD: Variables de entorno sensibles
-.env
+# SEGURIDAD: Variables de entorno sensibles de cada ambiente
 .env.local
 .env.prod
-*.env
 
 # Maven build output
 target/
