@@ -89,7 +89,7 @@ class UserRepositoryTest {
     @Test
     @DisplayName("should be case sensitive when searching by email")
     void shouldBeCaseSensitiveWhenSearchingByEmail() {
-        Optional<User> found = userRepository.findByEmail("DRIVER@PARKSHARE.COM");
+        Optional<User> found = userRepository.findByEmail("DRIVER@COCHERAYA.COM");
 
         assertThat(found).isEmpty();
     }
