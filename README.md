@@ -12,6 +12,7 @@
   * Christian Mar Carrillo (christian.mar@utec.edu.pe)
   * Luciano Rivera Valentin (luciano.rivera@utec.edu.pe)
   * Anthony Caypane Ramirez (anthony.caypane@utec.edu.pe)
+  * Steven Noreña Paredes (steven.norena@utec.edu.pe)
 
 ---
 
