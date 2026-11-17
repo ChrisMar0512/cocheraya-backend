@@ -1,3 +1,4 @@
+
 # CocheraYa — Plataforma Backend Inteligente de Estacionamiento On-Demand
 
 ---
@@ -10,9 +11,20 @@
 * **Institución:** Universidad de Ingeniería y Tecnología (UTEC) — Lima, Perú
 * **Integrantes:**
   * Christian Mar Carrillo (christian.mar@utec.edu.pe)
-  * Luciano Rivera Valentin (luciano.rivera@utec.edu.pe)
-  * Anthony Yair Caypane Ramirez (202410690, anthony.caypane@utec.edu.pe)
-  * Steven Noreña Paredes (steven.norena@utec.edu.pe)
+* **Integrantes:**
+  * Christian Mar Carrillo (christian.mar@utec.edu.pe)
+  * Steven Daniel Noreña Paredes (steven.norena@utec.edu.pe)
+  * Luciano Gabriel Rivera Valentin (luciano.rivera@utec.edu.pe)
+  * Anthony Yair Caypane Ramirez (anthony.caypane@utec.edu.pe)
+
+### Tabla de Participación y Aportes de los Integrantes (Rúbrica de Evaluación)
+
+| Integrante | Código UTEC | Correo Institucional | Principales Aportes | Participación (%) |
+| :--- | :--- | :--- | :--- | :---: |
+| **Christian Mar Carrillo** | 202410512 | christian.mar@utec.edu.pe | Arquitectura REST Backend con Spring Boot 3.2, geoespacial PostGIS, transaccionalidad pesimista, eventos asíncronos y aprovisionamiento Docker/Cloud. | **100 %** |
+| **Steven Daniel Noreña Paredes** | 202510642 | steven.norena@utec.edu.pe | Desarrollo del cliente Web (React 18 + TS + Vite), integración con mapa interactivo Leaflet, breadcrumbs, lazy loading y diseño de interfaces UI/UX. | **100 %** |
+| **Luciano Gabriel Rivera Valentin** | 202410149 | luciano.rivera@utec.edu.pe | Desarrollo de la aplicación móvil nativa (React Native + Expo), integración de sensores (GPS, Cámara para QR, galería), arquitectura modular y consumo de API. | **100 %** |
+| **Anthony Yair Caypane Ramirez** | 202410690 | anthony.caypane@utec.edu.pe | Integración de endpoints de reservas y billetera auditada, manejo global de errores (Error Boundary), validaciones client-side y políticas CORS. | **100 %** |
 
 ---
 
